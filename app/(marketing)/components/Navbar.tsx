@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ArrowUpRight, Sparkles } from "lucide-react";
 
 export default function Navbar() {
@@ -26,28 +27,15 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
         {/* Logo Trashly */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-[#0B636B] flex items-center justify-center text-[#B6F022] shadow-sm transition-transform duration-300 group-hover:scale-105">
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
-              <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12" />
-              <path d="m14 16-3 3 3 3" />
-              <path d="M8.293 13.596 5.196 9.5 7.196 6" />
-              <path d="m17.5 4-3 3 3 3" />
-              <path d="M15.5 7h4.815a1.83 1.83 0 0 1 1.57.882 1.785 1.785 0 0 1 .004 1.784l-1.465 2.534" />
-            </svg>
-          </div>
-          <span className="font-display font-bold text-2xl tracking-tight text-[#0B636B]">
-            Trashly<span className="text-[#64B60A]">.</span>
-          </span>
+        <Link href="/" className="flex items-center group py-1">
+          <Image
+            src="/images/Full Logo Trashly.png"
+            alt="Trashly Logo"
+            width={136}
+            height={42}
+            priority
+            className="h-10 sm:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+          />
         </Link>
 
         {/* Center Nav Links */}
