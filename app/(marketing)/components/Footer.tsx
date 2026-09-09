@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Recycle, Heart, MapPin, Mail, Phone } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -8,13 +9,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
           {/* Brand Column (5 cols) */}
           <div className="md:col-span-5 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#B6F022]">
-                <Recycle className="w-5 h-5" />
-              </div>
-              <span className="font-display font-bold text-2xl tracking-tight text-white">
-                Trashly<span className="text-[#B6F022]">.</span>
-              </span>
+            {/* Logo Trashly */}
+            <Link href="/" className="flex items-center group py-1">
+              <Image
+                src="/images/Logo Trashly white.png"
+                alt="Trashly Logo"
+                width={136}
+                height={42}
+                priority
+                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </Link>
 
             <p className="text-sm text-[#EFF0EB]/75 leading-relaxed max-w-sm">
