@@ -1,6 +1,7 @@
 import Navbar from "./(marketing)/components/Navbar";
 import Hero from "./(marketing)/components/Hero";
 import TrustRow from "./(marketing)/components/TrustRow";
+import AboutSection from "./(marketing)/components/AboutSection";
 import FeatureGrid from "./(marketing)/components/FeatureGrid";
 import CtaSteps from "./(marketing)/components/CtaSteps";
 import Footer from "./(marketing)/components/Footer";
@@ -16,6 +17,9 @@ export default function Home() {
 
       {/* Trust Row: Accepted Waste Categories with Verification Badges */}
       <TrustRow />
+
+      {/* About Section: Story, Mission & Community Impact */}
+      <AboutSection />
 
       {/* Feature Grid: Documentary Photo + Tiered Color Cards */}
       <FeatureGrid />

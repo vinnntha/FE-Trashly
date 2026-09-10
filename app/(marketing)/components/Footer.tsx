@@ -39,17 +39,22 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-[#EFF0EB]/70">
               <li>
-                <a href="#fitur" className="hover:text-[#B6F022] transition-colors">
+                <Link href="/about" className="hover:text-[#B6F022] transition-colors">
+                  Tentang Trashly
+                </Link>
+              </li>
+              <li>
+                <a href="/#fitur" className="hover:text-[#B6F022] transition-colors">
                   Fitur Unggulan
                 </a>
               </li>
               <li>
-                <a href="#cara-kerja" className="hover:text-[#B6F022] transition-colors">
+                <a href="/#cara-kerja" className="hover:text-[#B6F022] transition-colors">
                   Cara Kerja & 3 Langkah
                 </a>
               </li>
               <li>
-                <a href="#kategori" className="hover:text-[#B6F022] transition-colors">
+                <a href="/#kategori" className="hover:text-[#B6F022] transition-colors">
                   Kategori Sampah
                 </a>
               </li>

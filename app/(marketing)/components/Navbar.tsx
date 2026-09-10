@@ -19,11 +19,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled
+      className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
           ? "bg-[#EFF0EB]/85 backdrop-blur-md border-b border-[#0B636B]/10 shadow-[0_4px_20px_-8px_rgba(11,99,107,0.08)]"
           : "bg-[#EFF0EB]"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
         {/* Logo Trashly */}
@@ -58,12 +57,12 @@ export default function Navbar() {
           >
             Kategori Sampah
           </a>
-          <a
-            href="#tentang"
+          <Link
+            href="/about"
             className="hover:text-[#0B636B] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-[#64B60A] after:absolute after:bottom-0 after:left-0 after:transition-all"
           >
             Tentang
-          </a>
+          </Link>
         </nav>
 
         {/* Right Auth CTA */}
@@ -127,13 +126,13 @@ export default function Navbar() {
             >
               Kategori Sampah
             </a>
-            <a
-              href="#tentang"
+            <Link
+              href="/about"
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#64B60A]"
             >
               Tentang
-            </a>
+            </Link>
           </nav>
           <div className="pt-4 border-t border-[#0B636B]/10 flex flex-col gap-2.5">
             <Link
