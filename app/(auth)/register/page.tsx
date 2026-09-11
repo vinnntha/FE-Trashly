@@ -457,7 +457,7 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-[#0B636B] uppercase tracking-wider mb-1.5">
-                      Nama Pengelola / Penanggung Jawab
+                      Nama Pengelola
                     </label>
                     <input
                       type="text"
