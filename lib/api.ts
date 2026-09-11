@@ -45,13 +45,14 @@ export interface ApiErrorResponse {
 /**
  * Utility error handler to format NestJS exception responses cleanly
  */
-function handleApiError(errorData: any): string {
-  if (!errorData) return 'Terjadi kesalahan sistem. Silakan coba lagi.';
-  if (typeof errorData.message === 'string') {
-    return errorData.message;
+function handleApiError(errorData: unknown): string {
+  if (!errorData || typeof errorData !== 'object') return 'Terjadi kesalahan sistem. Silakan coba lagi.';
+  const err = errorData as Record<string, unknown>;
+  if (typeof err.message === 'string') {
+    return err.message;
   }
-  if (Array.isArray(errorData.message)) {
-    return errorData.message.join(', ');
+  if (Array.isArray(err.message)) {
+    return err.message.join(', ');
   }
   return 'Gagal memproses permintaan.';
 }
@@ -80,7 +81,7 @@ export async function loginApi(username: string, password: string): Promise<Auth
 /**
  * Register Nasabah (Warga) API endpoint call
  */
-export async function registerNasabahApi(formData: FormData): Promise<any> {
+export async function registerNasabahApi(formData: FormData): Promise<{ message: string; data?: unknown }> {
   const response = await fetch(`${API_BASE_URL}/auth/nasabah/register`, {
     method: 'POST',
     body: formData, // multipart/form-data
@@ -104,7 +105,7 @@ export async function registerAdminApi(data: {
   namaUnit: string;
   namaPengelola: string;
   telp: string;
-}): Promise<any> {
+}): Promise<{ message: string; data?: unknown }> {
   const response = await fetch(`${API_BASE_URL}/auth/admin/register`, {
     method: 'POST',
     headers: {

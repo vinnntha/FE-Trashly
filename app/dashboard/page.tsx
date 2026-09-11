@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import RoleGuard from "@/components/auth/RoleGuard";
 import {
   LogOut,
   Award,
@@ -21,30 +21,14 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
-  const { user, isLoading, logout } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/login");
-    }
-  }, [user, isLoading, router]);
-
-  if (isLoading) {
-    return (
-      <main className="min-h-screen bg-[#EFF0EB] flex items-center justify-center p-6">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-[#0B636B] border-t-[#B6F022] rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-[#0B636B]">Memuat dashboard...</p>
-        </div>
-      </main>
-    );
-  }
+  const { user, tokenRole, logout } = useAuth();
 
   if (!user) return null;
 
-  const isNasabah = user.role === "NASABAH";
+  const currentRole = tokenRole || user.role;
+  const isNasabah = currentRole === "NASABAH";
   const nasabahData = user.nasabah;
   const adminData = user.adminBank;
 
@@ -91,7 +75,7 @@ export default function DashboardPage() {
           <div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CFE26C]/40 text-[#0B636B] text-xs font-bold uppercase tracking-wider mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#64B60A]" />
-              <span>Dashboard {user.role}</span>
+              <span>Dashboard {currentRole}</span>
             </span>
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-[#0B636B] tracking-tight">
               Halo, {isNasabah ? nasabahData?.namaNasabah || user.username : adminData?.namaPengelola || user.username}! 👋
@@ -115,7 +99,6 @@ export default function DashboardPage() {
         {/* DASHBOARD NASABAH */}
         {isNasabah && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
             {/* Kartu Saldo Poin Main Card (7 cols) */}
             <div className="lg:col-span-7 bg-[#0B636B] text-[#EFF0EB] rounded-3xl p-8 shadow-[0_20px_50px_-12px_rgba(11,99,107,0.35)] border border-white/10 relative overflow-hidden flex flex-col justify-between min-h-[320px]">
               <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
@@ -216,14 +199,12 @@ export default function DashboardPage() {
                 Terdaftar di sistem Trashly Indonesia.
               </div>
             </div>
-
           </div>
         )}
 
         {/* DASHBOARD ADMIN BANK SAMPAH */}
         {!isNasabah && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
             {/* Main Admin Card (7 cols) */}
             <div className="lg:col-span-7 bg-[#0B636B] text-[#EFF0EB] rounded-3xl p-8 shadow-[0_20px_50px_-12px_rgba(11,99,107,0.35)] border border-white/10 flex flex-col justify-between min-h-[320px]">
               <div>
@@ -279,11 +260,17 @@ export default function DashboardPage() {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
-
           </div>
         )}
-
       </div>
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <RoleGuard allowedRoles={["NASABAH", "ADMIN"]}>
+      <DashboardContent />
+    </RoleGuard>
   );
 }

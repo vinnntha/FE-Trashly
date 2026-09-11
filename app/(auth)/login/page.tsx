@@ -47,14 +47,11 @@ export default function LoginPage() {
       
       // Brief delay for feedback before redirecting
       setTimeout(() => {
-        if (userProfile.role === "ADMIN") {
-          router.push("/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
+        router.push("/dashboard");
       }, 1000);
-    } catch (err: any) {
-      setError(err.message || "Gagal masuk. Periksa kembali username dan kata sandi Anda.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal masuk. Periksa kembali username dan kata sandi Anda.";
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -102,8 +99,8 @@ export default function LoginPage() {
               <ShieldCheck className="w-4 h-4 text-[#B6F022]" />
               <span>Timbangan Digital Real-time & Akurat</span>
             </div>
-            <div className="flex items-center gap-2.5 text-[#CFE26C]">
-              <Recycle className="w-4 h-4 text-[#B6F022]" />
+            <div className="flex items-center gap-2.5 text-[#EFF0EB]/70">
+              <Recycle className="w-4 h-4 text-[#CFE26C]" />
               <span>Pemberdayaan 45+ Bank Sampah Unit</span>
             </div>
           </div>

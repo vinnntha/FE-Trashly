@@ -153,8 +153,9 @@ export default function RegisterPage() {
           router.push("/login");
         }, 1200);
       }
-    } catch (err: any) {
-      setError(err.message || "Gagal melakukan pendaftaran. Silakan periksa data Anda.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal melakukan pendaftaran. Silakan periksa data Anda.";
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }

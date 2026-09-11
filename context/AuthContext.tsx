@@ -1,22 +1,34 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  ReactNode,
+} from "react";
 import { UserProfile, loginApi, registerNasabahApi, registerAdminApi, getMeApi } from "@/lib/api";
+import { isTokenExpired, getTokenRemainingSeconds, getTokenRole } from "@/lib/jwt";
+import { setAuthCookie, removeAuthCookie } from "@/lib/cookie";
 
 interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
+  tokenRole: 'NASABAH' | 'ADMIN' | null;
   isLoading: boolean;
+  isSessionExpired: boolean;
   login: (username: string, password: string) => Promise<UserProfile>;
-  registerNasabah: (formData: FormData) => Promise<any>;
+  registerNasabah: (formData: FormData) => Promise<unknown>;
   registerAdmin: (data: {
     username: string;
     password: string;
     namaUnit: string;
     namaPengelola: string;
     telp: string;
-  }) => Promise<any>;
-  logout: () => void;
+  }) => Promise<unknown>;
+  logout: (expired?: boolean) => void;
   refreshUser: () => Promise<void>;
 }
 
@@ -29,6 +41,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
+
+  const expirationTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clear auto-expiration timer
+  const clearExpirationTimer = useCallback(() => {
+    if (expirationTimerRef.current) {
+      clearTimeout(expirationTimerRef.current);
+      expirationTimerRef.current = null;
+    }
+  }, []);
+
+  const handleSessionExpired = useCallback(() => {
+    clearExpirationTimer();
+    setToken(null);
+    setUser(null);
+    setIsSessionExpired(true);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      removeAuthCookie();
+    }
+  }, [clearExpirationTimer]);
+
+  // Schedule auto-logout when token expires
+  const scheduleExpirationTimer = useCallback((jwtToken: string) => {
+    clearExpirationTimer();
+    const remainingSeconds = getTokenRemainingSeconds(jwtToken);
+
+    if (remainingSeconds <= 0) {
+      handleSessionExpired();
+      return;
+    }
+
+    // Schedule timer to trigger slightly before or right on expiration
+    expirationTimerRef.current = setTimeout(() => {
+      console.warn("JWT Token has expired. Logging out automatically.");
+      handleSessionExpired();
+    }, remainingSeconds * 1000);
+  }, [clearExpirationTimer, handleSessionExpired]);
 
   // Load saved session on initial mount
   useEffect(() => {
@@ -39,6 +91,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const storedUser = localStorage.getItem(USER_KEY);
 
       if (storedToken) {
+        // 1. First check if token is expired locally
+        if (isTokenExpired(storedToken)) {
+          console.warn("Stored token is already expired. Clearing session.");
+          handleSessionExpired();
+          setIsLoading(false);
+          return;
+        }
+
+        // 2. Token is valid in time: sync cookie and setup auto-logout timer
+        const remainingSeconds = getTokenRemainingSeconds(storedToken);
+        setAuthCookie(storedToken, remainingSeconds);
+        scheduleExpirationTimer(storedToken);
+
         setToken(storedToken);
         if (storedUser) {
           try {
@@ -48,17 +113,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
 
-        // Verify session with backend
+        // 3. Verify session with backend API
         try {
           const res = await getMeApi(storedToken);
           setUser(res.data);
           localStorage.setItem(USER_KEY, JSON.stringify(res.data));
         } catch (err) {
-          console.warn("Session expired or invalid token:", err);
-          localStorage.removeItem(TOKEN_KEY);
-          localStorage.removeItem(USER_KEY);
-          setToken(null);
-          setUser(null);
+          console.warn("Session verification failed on backend:", err);
+          handleSessionExpired();
         }
       }
 
@@ -66,16 +128,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     initAuth();
-  }, []);
+
+    return () => {
+      clearExpirationTimer();
+    };
+  }, [clearExpirationTimer, handleSessionExpired, scheduleExpirationTimer]);
 
   const refreshUser = async () => {
-    if (!token) return;
+    if (!token || isTokenExpired(token)) {
+      handleSessionExpired();
+      return;
+    }
     try {
       const res = await getMeApi(token);
       setUser(res.data);
       localStorage.setItem(USER_KEY, JSON.stringify(res.data));
     } catch (err) {
       console.error("Failed to refresh user:", err);
+      handleSessionExpired();
     }
   };
 
@@ -93,14 +163,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setToken(newToken);
     setUser(profile);
+    setIsSessionExpired(false);
 
-    localStorage.setItem(TOKEN_KEY, newToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(profile));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(TOKEN_KEY, newToken);
+      localStorage.setItem(USER_KEY, JSON.stringify(profile));
+    }
+
+    // Set cookie and schedule timer based on token exp
+    const remainingSeconds = getTokenRemainingSeconds(newToken);
+    setAuthCookie(newToken, remainingSeconds);
+    scheduleExpirationTimer(newToken);
 
     return profile;
   };
 
-  const registerNasabah = async (formData: FormData): Promise<any> => {
+  const registerNasabah = async (formData: FormData): Promise<unknown> => {
     const res = await registerNasabahApi(formData);
     return res;
   };
@@ -111,24 +189,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     namaUnit: string;
     namaPengelola: string;
     telp: string;
-  }): Promise<any> => {
+  }): Promise<unknown> => {
     const res = await registerAdminApi(data);
     return res;
   };
 
-  const logout = () => {
+  const logout = (expired: boolean = false) => {
+    clearExpirationTimer();
     setToken(null);
     setUser(null);
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    if (expired) {
+      setIsSessionExpired(true);
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      removeAuthCookie();
+    }
   };
+
+  // Derive role securely from token payload to avoid relying solely on client state
+  const tokenRole = token ? getTokenRole(token) : null;
 
   return (
     <AuthContext.Provider
       value={{
         user,
         token,
+        tokenRole,
         isLoading,
+        isSessionExpired,
         login,
         registerNasabah,
         registerAdmin,
