@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
+import { getImageUrl } from "@/lib/image";
 import StatusBadge from "@/components/nasabah/StatusBadge";
 import EmptyState from "@/components/nasabah/EmptyState";
 import {
@@ -189,11 +190,7 @@ export default function NotaTukarPage({
           <div className="relative w-20 h-20 rounded-2xl bg-white overflow-hidden shrink-0 border border-[#0B636B]/10 flex items-center justify-center">
             {nota.hadiah.foto ? (
               <Image
-                src={
-                  nota.hadiah.foto.startsWith("http")
-                    ? nota.hadiah.foto
-                    : `http://localhost:5000${nota.hadiah.foto}`
-                }
+                src={getImageUrl(nota.hadiah.foto)}
                 alt={nota.hadiah.namaHadiah}
                 fill
                 className="object-cover"

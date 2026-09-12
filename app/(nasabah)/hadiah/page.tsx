@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
+import { getImageUrl } from "@/lib/image";
 import { useAuth } from "@/context/AuthContext";
 import SkeletonCard from "@/components/nasabah/SkeletonCard";
 import EmptyState from "@/components/nasabah/EmptyState";
@@ -221,11 +222,7 @@ export default function KatalogHadiahPage() {
                   <div className="relative w-full h-48 bg-[#EFF0EB] overflow-hidden flex items-center justify-center">
                     {item.foto ? (
                       <Image
-                        src={
-                          item.foto.startsWith("http")
-                            ? item.foto
-                            : `http://localhost:5000${item.foto}`
-                        }
+                        src={getImageUrl(item.foto)}
                         alt={item.namaHadiah}
                         fill
                         className="object-cover"

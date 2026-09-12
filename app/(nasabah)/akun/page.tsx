@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
+import { getImageUrl } from "@/lib/image";
 import { useAuth } from "@/context/AuthContext";
 import { clearSession } from "@/lib/auth";
 import SkeletonCard from "@/components/nasabah/SkeletonCard";
@@ -88,11 +89,7 @@ export default function AkunNasabahPage() {
           {nasabah?.foto ? (
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shrink-0 border-2 border-[#64B60A]/30 shadow-md">
               <Image
-                src={
-                  nasabah.foto.startsWith("http")
-                    ? nasabah.foto
-                    : `http://localhost:5000${nasabah.foto}`
-                }
+                src={getImageUrl(nasabah.foto)}
                 alt={nasabah.namaNasabah}
                 fill
                 className="object-cover"

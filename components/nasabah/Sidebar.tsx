@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { getImageUrl } from "@/lib/image";
 import {
   LayoutDashboard,
   PlusCircle,
@@ -117,11 +118,7 @@ export default function Sidebar() {
           {user?.nasabah?.foto ? (
             <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#0B636B]/20">
               <Image
-                src={
-                  user.nasabah.foto.startsWith("http")
-                    ? user.nasabah.foto
-                    : `http://localhost:5000${user.nasabah.foto}`
-                }
+                src={getImageUrl(user.nasabah.foto)}
                 alt="Foto Profil"
                 fill
                 className="object-cover"

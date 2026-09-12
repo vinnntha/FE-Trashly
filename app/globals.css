@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-mist: #EFF0EB;
   --color-sprout: #CFE26C;
   --color-lime: #B6F022;

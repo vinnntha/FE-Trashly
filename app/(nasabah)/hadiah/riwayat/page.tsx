@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
+import { getImageUrl } from "@/lib/image";
 import StatusBadge from "@/components/nasabah/StatusBadge";
 import SkeletonCard from "@/components/nasabah/SkeletonCard";
 import EmptyState from "@/components/nasabah/EmptyState";
@@ -107,11 +108,7 @@ export default function HistoriPenukaranPage() {
                   <div className="relative w-14 h-14 rounded-2xl bg-[#EFF0EB] overflow-hidden shrink-0 border border-[#0B636B]/10 flex items-center justify-center">
                     {item.hadiah.foto ? (
                       <Image
-                        src={
-                          item.hadiah.foto.startsWith("http")
-                            ? item.hadiah.foto
-                            : `http://localhost:5000${item.hadiah.foto}`
-                        }
+                        src={getImageUrl(item.hadiah.foto)}
                         alt={item.hadiah.namaHadiah}
                         fill
                         className="object-cover"
