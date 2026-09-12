@@ -75,10 +75,10 @@ export default function AkunNasabahPage() {
           <span>Profil Pengguna</span>
         </span>
         <h1 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
-          Akun Nasabah Saya
+          Akun Saya
         </h1>
         <p className="text-xs sm:text-sm text-[#0B636B]/75 mt-1">
-          Informasi data kepesertaan Anda di platform bank sampah Trashly.
+          Informasi data Anda di platform bank sampah Trashly.
         </p>
       </div>
 
