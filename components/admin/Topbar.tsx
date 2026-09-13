@@ -18,6 +18,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/admin/hadiah": "Hadiah & Voucher",
   "/admin/profil": "Profil Unit Bank",
   "/admin/setor": "Data Setoran",
+  "/admin/setoran": "Data Setoran",
   "/admin/penukaran": "Data Penukaran",
   "/admin/rekapitulasi": "Rekapitulasi",
 };

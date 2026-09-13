@@ -50,24 +50,18 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "Data Setoran",
-    href: "/admin/setor",
+    href: "/admin/setoran",
     icon: ArrowDownToLine,
-    badge: "Segera",
-    isUpcoming: true,
   },
   {
     label: "Data Penukaran",
     href: "/admin/penukaran",
     icon: ArrowLeftRight,
-    badge: "Segera",
-    isUpcoming: true,
   },
   {
     label: "Rekapitulasi",
     href: "/admin/rekapitulasi",
     icon: FileText,
-    badge: "Segera",
-    isUpcoming: true,
   },
   {
     label: "Profil Unit",
