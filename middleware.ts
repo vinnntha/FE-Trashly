@@ -4,6 +4,7 @@ import { isTokenExpired } from './lib/jwt';
 import { AUTH_COOKIE_NAME } from './lib/cookie';
 
 const PROTECTED_PREFIXES = [
+  '/admin',
   '/dashboard',
   '/setor',
   '/riwayat',
@@ -21,7 +22,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(prefix)
   );
 
-  // Guard all Nasabah protected routes from direct URL access without a valid token
+  // Guard all protected routes from direct URL access without a valid token
   if (isProtected) {
     const hasValidToken = tokenCookie && !isTokenExpired(tokenCookie);
 
@@ -43,6 +44,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/admin/:path*',
     '/dashboard/:path*',
     '/setor/:path*',
     '/riwayat/:path*',

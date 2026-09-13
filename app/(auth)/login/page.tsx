@@ -47,7 +47,11 @@ export default function LoginPage() {
       
       // Brief delay for feedback before redirecting
       setTimeout(() => {
-        router.push("/dashboard");
+        if (userProfile.role === "ADMIN") {
+          router.push("/admin/nasabah");
+        } else {
+          router.push("/dashboard");
+        }
       }, 1000);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Gagal masuk. Periksa kembali username dan kata sandi Anda.";
