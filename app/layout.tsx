@@ -37,6 +37,7 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${jakarta.variable} ${outfit.variable} scroll-smooth`}
+      data-scroll-behavior="smooth"
     >
       <body className="min-h-screen bg-mist text-teal-deep antialiased selection:bg-sprout selection:text-teal-deep">
         <Providers>{children}</Providers>

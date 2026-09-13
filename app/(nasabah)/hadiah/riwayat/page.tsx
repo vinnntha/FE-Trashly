@@ -111,6 +111,7 @@ export default function HistoriPenukaranPage() {
                         src={getImageUrl(item.hadiah.foto)}
                         alt={item.hadiah.namaHadiah}
                         fill
+                        sizes="56px"
                         className="object-cover"
                       />
                     ) : (

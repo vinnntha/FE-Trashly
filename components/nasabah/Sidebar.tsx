@@ -121,6 +121,7 @@ export default function Sidebar() {
                 src={getImageUrl(user.nasabah.foto)}
                 alt="Foto Profil"
                 fill
+                sizes="40px"
                 className="object-cover"
               />
             </div>

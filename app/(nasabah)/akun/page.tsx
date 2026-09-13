@@ -92,6 +92,7 @@ export default function AkunNasabahPage() {
                 src={getImageUrl(nasabah.foto)}
                 alt={nasabah.namaNasabah}
                 fill
+                sizes="(max-width: 640px) 80px, 96px"
                 className="object-cover"
               />
             </div>

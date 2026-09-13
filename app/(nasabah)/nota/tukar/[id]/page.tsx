@@ -193,6 +193,7 @@ export default function NotaTukarPage({
                 src={getImageUrl(nota.hadiah.foto)}
                 alt={nota.hadiah.namaHadiah}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             ) : (
