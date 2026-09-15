@@ -193,6 +193,7 @@ export default function DataPenukaranPage() {
                 src={getImageUrl(item.hadiah.foto)}
                 alt={item.hadiah.namaHadiah}
                 fill
+                sizes="32px"
                 className="object-cover"
               />
             ) : (

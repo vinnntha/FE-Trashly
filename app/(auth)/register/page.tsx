@@ -407,7 +407,7 @@ export default function RegisterPage() {
                   {fotoPreview ? (
                     <div className="flex items-center gap-4 p-2 rounded-2xl bg-[#EFF0EB]/80 border border-[#0B636B]/20">
                       <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0">
-                        <Image src={fotoPreview} alt="Preview Foto" fill className="object-cover" />
+                        <Image src={fotoPreview} alt="Preview Foto" fill sizes="48px" className="object-cover" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-[#0B636B] truncate">{fotoFile?.name}</p>
