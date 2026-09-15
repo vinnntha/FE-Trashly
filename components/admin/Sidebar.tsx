@@ -94,14 +94,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           className="flex items-center gap-2.5 group"
           onClick={onMobileClose}
         >
-          <div className="relative w-9 h-9 rounded-2xl overflow-hidden shadow-sm">
-            <Image
-              src="/logo.png"
-              alt="Trashly Logo"
-              fill
-              sizes="36px"
-              className="object-contain"
-            />
+          <div className="w-11 h-11 rounded-2xl bg-[#0B636B] text-[#B6F022] font-display font-bold text-sm flex items-center justify-center shrink-0">
+            {user?.adminBank?.namaPengelola?.charAt(0).toUpperCase() || "A"}
           </div>
           <div>
             <div className="flex items-center gap-1.5">
@@ -145,28 +139,25 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               key={item.href}
               href={item.href}
               onClick={onMobileClose}
-              className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${
-                isActive
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${isActive
                   ? "bg-[#0B636B] text-white shadow-sm shadow-[#0B636B]/20"
                   : "text-[#0B636B]/75 hover:bg-[#EFF0EB] hover:text-[#0B636B]"
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Icon
-                  className={`w-4 h-4 shrink-0 ${
-                    isActive ? "text-[#B6F022]" : "text-[#0B636B]/60"
-                  }`}
+                  className={`w-4 h-4 shrink-0 ${isActive ? "text-[#B6F022]" : "text-[#0B636B]/60"
+                    }`}
                 />
                 <span className="truncate">{item.label}</span>
               </div>
 
               {item.badge && (
                 <span
-                  className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
-                    isActive
+                  className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${isActive
                       ? "bg-white/20 text-[#B6F022]"
                       : "bg-[#EFF0EB] text-[#0B636B]/60"
-                  }`}
+                    }`}
                 >
                   {item.badge}
                 </span>
