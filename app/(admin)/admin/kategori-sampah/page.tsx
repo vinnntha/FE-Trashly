@@ -66,15 +66,23 @@ export default function AdminKategoriSampahPage() {
   const [deleteDialogError, setDeleteDialogError] = useState<string | null>(null);
 
   // Query Kategori Sampah List
-  const { data: kategoriList = [], isLoading } = useQuery({
+  const { data: rawKategori, isLoading } = useQuery({
     queryKey: ["kategori-sampah-list"],
     queryFn: async () => {
-      const res = await apiClient<{ data: KategoriSampahItem[] }>(
+      const res = await apiClient<any>(
         "/kategori-sampah"
       );
-      return res.data || [];
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
     },
   });
+
+  const kategoriList: KategoriSampahItem[] = Array.isArray(rawKategori)
+    ? rawKategori
+    : Array.isArray((rawKategori as any)?.data)
+    ? (rawKategori as any).data
+    : [];
 
   // Form setup
   const form = useForm<KategoriSampahInput>({

@@ -66,13 +66,21 @@ export default function AdminHadiahPage() {
   const [deleteDialogError, setDeleteDialogError] = useState<string | null>(null);
 
   // Query Hadiah List
-  const { data: hadiahList = [], isLoading } = useQuery({
+  const { data: rawHadiah, isLoading } = useQuery({
     queryKey: ["hadiah-list"],
     queryFn: async () => {
-      const res = await apiClient<{ data: HadiahItem[] }>("/hadiah");
-      return res.data || [];
+      const res = await apiClient<any>("/hadiah");
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
     },
   });
+
+  const hadiahList: HadiahItem[] = Array.isArray(rawHadiah)
+    ? rawHadiah
+    : Array.isArray((rawHadiah as any)?.data)
+    ? (rawHadiah as any).data
+    : [];
 
   // Form setup
   const form = useForm<HadiahInput>({

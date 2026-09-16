@@ -85,13 +85,21 @@ export default function AdminNasabahPage() {
   const [deleteDialogError, setDeleteDialogError] = useState<string | null>(null);
 
   // Query Nasabah List
-  const { data: nasabahList = [], isLoading } = useQuery({
+  const { data: rawNasabah, isLoading } = useQuery({
     queryKey: ["nasabah-list"],
     queryFn: async () => {
-      const res = await apiClient<{ data: NasabahItem[] }>("/admin/nasabah");
-      return res.data || [];
+      const res = await apiClient<any>("/admin/nasabah");
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.data)) return res.data;
+      return [];
     },
   });
+
+  const nasabahList: NasabahItem[] = Array.isArray(rawNasabah)
+    ? rawNasabah
+    : Array.isArray((rawNasabah as any)?.data)
+    ? (rawNasabah as any).data
+    : [];
 
   // Form for Create Nasabah
   const createForm = useForm<CreateNasabahInput>({
