@@ -16,8 +16,8 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
       {
-        protocol: "http",
-        hostname: "localhost",
+        protocol: "https",
+        hostname: "be-trashly-production.up.railway.app",
       },
     ],
   },
@@ -25,11 +25,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/v1/:path*",
-        destination: "http://localhost:5000/api/v1/:path*",
+        destination: "https://be-trashly-production.up.railway.app/api/v1/:path*",
       },
       {
         source: "/uploads/:path*",
-        destination: "http://localhost:5000/uploads/:path*",
+        destination: "https://be-trashly-production.up.railway.app/uploads/:path*",
       },
     ];
   },

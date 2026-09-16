@@ -13,7 +13,7 @@ export function getImageUrl(foto?: string | null): string {
   // Fallback untuk URL lokal lama (misal: /uploads/hadiah/xyz.png)
   const backendUrl =
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "") ||
-    "http://localhost:5000";
+    "https://be-trashly-production.up.railway.app";
 
   return `${backendUrl}${foto.startsWith("/") ? "" : "/"}${foto}`;
 }
