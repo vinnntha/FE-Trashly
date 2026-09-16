@@ -10,6 +10,8 @@ interface StatCardProps {
   description?: string;
   trend?: string;
   colorScheme?: "teal" | "moss" | "sprout" | "lime";
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
 export function StatCard({
@@ -19,6 +21,8 @@ export function StatCard({
   description,
   trend,
   colorScheme = "teal",
+  onClick,
+  isActive = false,
 }: StatCardProps) {
   const schemeStyles = {
     teal: {
@@ -47,7 +51,12 @@ export function StatCard({
 
   return (
     <div
-      className={`bg-white rounded-3xl border ${current.border} p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between`}
+      onClick={onClick}
+      className={`bg-white rounded-3xl border ${current.border} p-5 sm:p-6 shadow-sm transition-all duration-200 flex flex-col justify-between ${
+        onClick
+          ? "cursor-pointer hover:shadow-md hover:scale-[1.01] active:scale-[0.99]"
+          : "hover:shadow-md"
+      } ${isActive ? "ring-2 ring-[#0B636B] border-transparent shadow-md" : ""}`}
     >
       <div className="flex items-center justify-between gap-3 mb-3">
         <span className="text-xs font-semibold text-[#0B636B]/70 tracking-wide">

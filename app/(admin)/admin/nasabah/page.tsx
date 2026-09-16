@@ -35,6 +35,7 @@ import {
   CheckCircle2,
   AlertCircle,
   ShieldCheck,
+  RefreshCw,
 } from "lucide-react";
 
 interface NasabahItem {
@@ -360,10 +361,15 @@ export default function AdminNasabahPage() {
     },
   ];
 
+  // Metrics
+  const totalNasabah = nasabahList.length;
+  const totalSaldoPoin = nasabahList.reduce((acc, n) => acc + Number(n.saldoPoin || 0), 0);
+  const avgPoin = totalNasabah > 0 ? Math.round(totalSaldoPoin / totalNasabah) : 0;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Banner / Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-sm p-5 sm:p-6 rounded-3xl border border-[#0B636B]/10 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64B60A] bg-[#64B60A]/10 px-2.5 py-0.5 rounded-full">
@@ -374,23 +380,60 @@ export default function AdminNasabahPage() {
             Data Nasabah
           </h1>
           <p className="text-xs sm:text-sm text-[#0B636B]/70 mt-0.5">
-            Kelola data akun nasabah terdaftar, saldo poin, dan verifikasi informasi kepesertaan.
+            Kelola data akun nasabah terdaftar, saldo poin sirkular, dan verifikasi informasi kepesertaan.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            createForm.reset();
-            setCreatePhotoFile(null);
-            setCreatePhotoPreview(null);
-            setIsCreateOpen(true);
-          }}
-          className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shrink-0 self-start sm:self-auto"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Tambah Nasabah</span>
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["nasabah-list"] })}
+            title="Segarkan data"
+            className="p-2.5 rounded-2xl bg-white border border-[#0B636B]/15 text-[#0B636B] hover:bg-[#EFF0EB] hover:scale-105 active:scale-95 transition-all shadow-sm flex items-center justify-center"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-[#64B60A]" : ""}`} />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              createForm.reset();
+              setCreatePhotoFile(null);
+              setCreatePhotoPreview(null);
+              setIsCreateOpen(true);
+            }}
+            className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Tambah Nasabah</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Summary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="p-4 rounded-3xl bg-white border border-[#0B636B]/12 shadow-sm space-y-1">
+          <span className="text-[11px] font-semibold text-[#0B636B]/70">Total Nasabah Terdaftar</span>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-[#0B636B]">
+            {totalNasabah} <span className="text-xs font-normal opacity-70">Akun</span>
+          </div>
+          <div className="text-[10px] text-[#64B60A] font-semibold">Aktif terdaftar di unit</div>
+        </div>
+
+        <div className="p-4 rounded-3xl bg-white border border-[#64B60A]/20 shadow-sm space-y-1">
+          <span className="text-[11px] font-semibold text-[#0B636B]/70">Akumulasi Saldo Poin</span>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-[#64B60A]">
+            {totalSaldoPoin.toLocaleString("id-ID")} <span className="text-xs font-normal opacity-70">Poin</span>
+          </div>
+          <div className="text-[10px] text-[#0B636B]/60">Total poin beredar</div>
+        </div>
+
+        <div className="p-4 rounded-3xl bg-white border border-[#B6F022]/40 shadow-sm space-y-1">
+          <span className="text-[11px] font-semibold text-[#0B636B]/70">Rata-rata Saldo / Akun</span>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-[#0B636B]">
+            {avgPoin.toLocaleString("id-ID")} <span className="text-xs font-normal opacity-70">Poin</span>
+          </div>
+          <div className="text-[10px] text-[#0B636B]/60">Estimasi keaktifan nasabah</div>
+        </div>
       </div>
 
       {/* Toast Alert */}

@@ -27,6 +27,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 
 interface KategoriSampahItem {
@@ -43,6 +44,7 @@ interface KategoriSampahItem {
 export default function AdminKategoriSampahPage() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedJenis, setSelectedJenis] = useState<string>("ALL");
 
   // Modals state
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -332,10 +334,18 @@ export default function AdminKategoriSampahPage() {
     },
   ];
 
+  // Grouping metrics per jenis
+  const jenisMetrics = {
+    PLASTIK: kategoriList.filter((k) => k.jenis === "PLASTIK"),
+    KERTAS: kategoriList.filter((k) => k.jenis === "KERTAS"),
+    LOGAM: kategoriList.filter((k) => k.jenis === "LOGAM"),
+    KACA: kategoriList.filter((k) => k.jenis === "KACA"),
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Header / Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-sm p-5 sm:p-6 rounded-3xl border border-[#0B636B]/10 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64B60A] bg-[#64B60A]/10 px-2.5 py-0.5 rounded-full">
@@ -350,14 +360,62 @@ export default function AdminKategoriSampahPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={openCreateModal}
-          className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shrink-0 self-start sm:self-auto"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Tambah Kategori</span>
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["kategori-sampah-list"] })}
+            title="Segarkan data"
+            className="p-2.5 rounded-2xl bg-white border border-[#0B636B]/15 text-[#0B636B] hover:bg-[#EFF0EB] hover:scale-105 active:scale-95 transition-all shadow-sm flex items-center justify-center"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-[#64B60A]" : ""}`} />
+          </button>
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Tambah Kategori</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Category Type Interactive Filter Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { key: "PLASTIK", label: "Plastik", color: "#0B636B", list: jenisMetrics.PLASTIK },
+          { key: "KERTAS", label: "Kertas", color: "#64B60A", list: jenisMetrics.KERTAS },
+          { key: "LOGAM", label: "Logam", color: "#CFE26C", list: jenisMetrics.LOGAM },
+          { key: "KACA", label: "Kaca", color: "#B6F022", list: jenisMetrics.KACA },
+        ].map((item) => {
+          const isSelected = selectedJenis === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => setSelectedJenis(isSelected ? "ALL" : item.key)}
+              className={`p-4 rounded-3xl border text-left transition-all ${
+                isSelected
+                  ? "bg-[#0B636B] text-white border-[#0B636B] shadow-md scale-[1.02]"
+                  : "bg-white hover:bg-[#EFF0EB]/50 border-[#0B636B]/12 text-[#0B636B] shadow-sm"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="font-display font-bold text-xs">{item.label}</span>
+                <span
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+              </div>
+              <div className="text-xl sm:text-2xl font-extrabold">
+                {item.list.length} <span className="text-xs font-normal opacity-70">Item</span>
+              </div>
+              <div className={`text-[10px] mt-1 ${isSelected ? "text-[#B6F022]" : "text-[#64B60A] font-semibold"}`}>
+                {isSelected ? "Filter aktif (klik lepas)" : "Klik untuk filter"}
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {/* Toast Alert */}
@@ -379,35 +437,51 @@ export default function AdminKategoriSampahPage() {
       )}
 
       {/* Filter / Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="p-4 rounded-3xl bg-white border border-[#0B636B]/12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
         <SearchInput
-          placeholder="Cari nama kategori atau jenis sampah..."
+          placeholder="Cari nama kategori..."
           onSearch={setSearchQuery}
           className="w-full sm:max-w-md"
         />
 
-        <div className="text-xs font-semibold text-[#0B636B]/70 self-end sm:self-auto">
-          Total: <span className="text-[#0B636B] font-bold">{kategoriList.length}</span> kategori
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto">
+          {["ALL", "PLASTIK", "KERTAS", "LOGAM", "KACA"].map((jenis) => (
+            <button
+              key={jenis}
+              type="button"
+              onClick={() => setSelectedJenis(jenis)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
+                selectedJenis === jenis
+                  ? "bg-[#0B636B] text-[#B6F022] shadow-sm"
+                  : "bg-[#EFF0EB]/70 text-[#0B636B]/70 hover:bg-[#EFF0EB] hover:text-[#0B636B]"
+              }`}
+            >
+              {jenis === "ALL" ? "Semua Kategori" : jenis}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Data Table */}
-      <DataTable<KategoriSampahItem>
-        columns={columns}
-        data={kategoriList}
-        keyExtractor={(item) => item.id}
-        isLoading={isLoading}
-        emptyTitle="Belum ada kategori sampah"
-        emptyDescription="Katalog jenis sampah masih kosong. Tambahkan kategori seperti Plastik PET, Kertas Kardus, dll."
-        searchFilter={(item) => {
-          if (!searchQuery.trim()) return true;
-          const query = searchQuery.toLowerCase();
-          return (
-            item.namaKategori.toLowerCase().includes(query) ||
-            item.jenis.toLowerCase().includes(query)
-          );
-        }}
-      />
+      <div className="bg-white rounded-3xl border border-[#0B636B]/12 shadow-sm p-4 sm:p-6">
+        <DataTable<KategoriSampahItem>
+          columns={columns}
+          data={kategoriList}
+          keyExtractor={(item) => item.id}
+          isLoading={isLoading}
+          emptyTitle="Belum ada data kategori sampah"
+          emptyDescription="Belum ada jenis sampah yang dikonfigurasi pada unit ini."
+          searchFilter={(item) => {
+            if (selectedJenis !== "ALL" && item.jenis !== selectedJenis) return false;
+            if (!searchQuery.trim()) return true;
+            const query = searchQuery.toLowerCase();
+            return (
+              item.namaKategori.toLowerCase().includes(query) ||
+              item.jenis.toLowerCase().includes(query)
+            );
+          }}
+        />
+      </div>
 
       {/* MODAL: Tambah / Edit Kategori */}
       <Modal

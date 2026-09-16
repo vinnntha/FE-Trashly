@@ -28,6 +28,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 
 interface HadiahItem {
@@ -43,6 +44,7 @@ interface HadiahItem {
 export default function AdminHadiahPage() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
+  const [stockFilter, setStockFilter] = useState<"ALL" | "AVAILABLE" | "LOW">("ALL");
 
   // Modals state
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -297,10 +299,15 @@ export default function AdminHadiahPage() {
     },
   ];
 
+  // Metrics
+  const totalItems = hadiahList.length;
+  const totalStock = hadiahList.reduce((acc, h) => acc + Number(h.stok || 0), 0);
+  const lowStockCount = hadiahList.filter((h) => Number(h.stok || 0) <= 5).length;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Header / Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/70 backdrop-blur-sm p-5 sm:p-6 rounded-3xl border border-[#0B636B]/10 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64B60A] bg-[#64B60A]/10 px-2.5 py-0.5 rounded-full">
@@ -311,18 +318,60 @@ export default function AdminHadiahPage() {
             Hadiah & Voucher
           </h1>
           <p className="text-xs sm:text-sm text-[#0B636B]/70 mt-0.5">
-            Kelola katalog barang hadiah, kuota stok reward, dan nilai poin yang dibutuhkan nasabah untuk penukaran.
+            Kelola katalog barang reward, kuota ketersediaan stok, dan nilai poin penukaran nasabah.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={openCreateModal}
-          className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shrink-0 self-start sm:self-auto"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Tambah Hadiah</span>
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["hadiah-list"] })}
+            title="Segarkan data"
+            className="p-2.5 rounded-2xl bg-white border border-[#0B636B]/15 text-[#0B636B] hover:bg-[#EFF0EB] hover:scale-105 active:scale-95 transition-all shadow-sm flex items-center justify-center"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-[#64B60A]" : ""}`} />
+          </button>
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="px-5 py-2.5 rounded-full bg-[#B6F022] hover:bg-[#a8e018] text-[#0B636B] font-display font-bold text-xs sm:text-sm shadow-md shadow-[#B6F022]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Tambah Hadiah</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Summary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="p-4 rounded-3xl bg-white border border-[#0B636B]/12 shadow-sm space-y-1">
+          <span className="text-[11px] font-semibold text-[#0B636B]/70">Katalog Hadiah</span>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-[#0B636B]">
+            {totalItems} <span className="text-xs font-normal opacity-70">Item</span>
+          </div>
+          <div className="text-[10px] text-[#64B60A] font-semibold">Tersedia untuk klaim nasabah</div>
+        </div>
+
+        <div className="p-4 rounded-3xl bg-white border border-[#64B60A]/20 shadow-sm space-y-1">
+          <span className="text-[11px] font-semibold text-[#0B636B]/70">Total Unit Stok</span>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-[#64B60A]">
+            {totalStock.toLocaleString("id-ID")} <span className="text-xs font-normal opacity-70">Unit</span>
+          </div>
+          <div className="text-[10px] text-[#0B636B]/60">Total fisik dan voucher</div>
+        </div>
+
+        <div className="p-4 rounded-3xl bg-white border border-amber-300 shadow-sm space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-amber-800">Stok Menipis / Habis</span>
+            {lowStockCount > 0 && (
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+            )}
+          </div>
+          <div className="text-xl sm:text-2xl font-display font-extrabold text-amber-800">
+            {lowStockCount} <span className="text-xs font-normal opacity-70">Item</span>
+          </div>
+          <div className="text-[10px] text-amber-700 font-medium">Stok &le; 5 unit perlu restock</div>
+        </div>
       </div>
 
       {/* Toast Alert */}
@@ -344,32 +393,56 @@ export default function AdminHadiahPage() {
       )}
 
       {/* Filter / Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="p-4 rounded-3xl bg-white border border-[#0B636B]/12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
         <SearchInput
           placeholder="Cari nama barang atau voucher..."
           onSearch={setSearchQuery}
           className="w-full sm:max-w-md"
         />
 
-        <div className="text-xs font-semibold text-[#0B636B]/70 self-end sm:self-auto">
-          Total: <span className="text-[#0B636B] font-bold">{hadiahList.length}</span> item hadiah
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto">
+          {[
+            { key: "ALL", label: "Semua", count: totalItems },
+            { key: "AVAILABLE", label: "Stok Aman (>5)", count: totalItems - lowStockCount },
+            { key: "LOW", label: "Menipis (≤5)", count: lowStockCount },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setStockFilter(tab.key as any)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
+                stockFilter === tab.key
+                  ? "bg-[#0B636B] text-[#B6F022] shadow-sm"
+                  : "bg-[#EFF0EB]/70 text-[#0B636B]/70 hover:bg-[#EFF0EB] hover:text-[#0B636B]"
+              }`}
+            >
+              <span>{tab.label}</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/20">
+                {tab.count}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Data Table */}
-      <DataTable<HadiahItem>
-        columns={columns}
-        data={hadiahList}
-        keyExtractor={(item) => item.id}
-        isLoading={isLoading}
-        emptyTitle="Belum ada hadiah terdaftar"
-        emptyDescription="Katalog reward penukaran poin masih kosong. Tambahkan barang menarik seperti sembako, voucher pulsa, tumbler, dll."
-        searchFilter={(item) => {
-          if (!searchQuery.trim()) return true;
-          const query = searchQuery.toLowerCase();
-          return item.namaHadiah.toLowerCase().includes(query);
-        }}
-      />
+      <div className="bg-white rounded-3xl border border-[#0B636B]/12 shadow-sm p-4 sm:p-6">
+        <DataTable<HadiahItem>
+          columns={columns}
+          data={hadiahList}
+          keyExtractor={(item) => item.id}
+          isLoading={isLoading}
+          emptyTitle="Belum ada data hadiah"
+          emptyDescription="Belum ada hadiah atau voucher reward yang terdaftar di unit ini."
+          searchFilter={(item) => {
+            if (stockFilter === "AVAILABLE" && Number(item.stok) <= 5) return false;
+            if (stockFilter === "LOW" && Number(item.stok) > 5) return false;
+            if (!searchQuery.trim()) return true;
+            const query = searchQuery.toLowerCase();
+            return item.namaHadiah.toLowerCase().includes(query);
+          }}
+        />
+      </div>
 
       {/* MODAL: Tambah / Edit Hadiah */}
       <Modal
