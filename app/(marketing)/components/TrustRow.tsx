@@ -14,6 +14,8 @@ import {
   Info,
 } from "lucide-react";
 import Link from "next/link";
+import { apiClient } from "@/lib/api-client";
+import { ScrollReveal } from "./ScrollReveal";
 
 interface CategoryDetail {
   id: string;
@@ -116,11 +118,7 @@ export default function TrustRow() {
   const [activeId, setActiveId] = useState(DEFAULT_CATEGORIES[0].id);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/kategori-sampah")
-      .then((res) => {
-        if (!res.ok) throw new Error("Gagal mengambil kategori");
-        return res.json();
-      })
+    apiClient<{ data: any[] }>("/kategori-sampah")
       .then((res) => {
         if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
           const mapped: CategoryDetail[] = res.data.slice(0, 4).map((item: any) => {
@@ -210,9 +208,7 @@ export default function TrustRow() {
           setActiveId(mapped[0].id);
         }
       })
-      .catch(() => {
-        // keep fallback
-      });
+      .catch(() => {});
   }, []);
 
   const activeCategory =
@@ -222,168 +218,176 @@ export default function TrustRow() {
     <section id="kategori" className="py-14 sm:py-18 bg-white/50 border-y border-[#0B636B]/10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#CFE26C]/40 text-[#0B636B] text-xs font-bold mb-3 border border-[#64B60A]/20">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#64B60A]" />
-              <span>Standar Penerimaan Bank Sampah</span>
+        <ScrollReveal animation="fade-up" duration={600}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#CFE26C]/40 text-[#0B636B] text-xs font-bold mb-3 border border-[#64B60A]/20">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#64B60A]" />
+                <span>Standar Penerimaan Bank Sampah</span>
+              </div>
+              <h2 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
+                Kategori Sampah Terpilah & Ketentuan Penimbangan
+              </h2>
             </div>
-            <h2 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
-              Kategori Sampah Terpilah & Ketentuan Penimbangan
-            </h2>
+            <p className="text-xs sm:text-sm text-[#0B636B]/70 max-w-md">
+              Klik tiap kategori untuk melihat syarat penerimaan, hal yang dilarang,
+              dan tips pemilahan agar poin setoranmu maksimal.
+            </p>
           </div>
-          <p className="text-xs sm:text-sm text-[#0B636B]/70 max-w-md">
-            Klik tiap kategori untuk melihat syarat penerimaan, hal yang dilarang,
-            dan tips pemilahan agar poin setoranmu maksimal.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Interactive Category Selector Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {categories.map((item) => {
+          {categories.map((item, idx) => {
             const Icon = item.icon;
             const isActive = item.id === activeId;
             return (
-              <button
+              <ScrollReveal
                 key={item.id}
-                type="button"
-                onClick={() => setActiveId(item.id)}
-                className={`text-left p-5 rounded-2xl transition-all duration-200 border cursor-pointer relative overflow-hidden ${
-                  isActive
-                    ? "bg-[#0B636B] text-[#EFF0EB] border-[#0B636B] shadow-[0_8px_24px_-6px_rgba(11,99,107,0.35)] translate-y-[-2px]"
-                    : "bg-[#EFF0EB]/70 hover:bg-[#EFF0EB] text-[#0B636B] border-[#0B636B]/15 hover:border-[#64B60A]/40"
-                }`}
+                animation="fade-up"
+                delay={idx * 100}
+                duration={500}
               >
-                {/* Active Indicator Bar */}
-                {isActive && (
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#B6F022]" />
-                )}
+                <button
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  className={`w-full text-left p-5 rounded-2xl transition-all duration-200 border cursor-pointer relative overflow-hidden ${
+                    isActive
+                      ? "bg-[#0B636B] text-[#EFF0EB] border-[#0B636B] shadow-[0_8px_24px_-6px_rgba(11,99,107,0.35)] translate-y-[-2px]"
+                      : "bg-[#EFF0EB]/70 hover:bg-[#EFF0EB] text-[#0B636B] border-[#0B636B]/15 hover:border-[#64B60A]/40"
+                  }`}
+                >
+                  {/* Active Indicator Bar */}
+                  {isActive && (
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-[#B6F022]" />
+                  )}
 
-                <div className="flex items-start justify-between mb-3">
-                  <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                      isActive
-                        ? "bg-[#B6F022] text-[#0B636B]"
-                        : "bg-white text-[#0B636B] shadow-xs"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
+                  <div className="flex items-start justify-between mb-3">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        isActive
+                          ? "bg-[#B6F022] text-[#0B636B]"
+                          : "bg-white text-[#0B636B] shadow-xs"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span
+                      className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                        isActive
+                          ? "bg-white/15 text-[#B6F022]"
+                          : "bg-[#CFE26C]/40 text-[#0B636B]"
+                      }`}
+                    >
+                      {item.rate}
+                    </span>
                   </div>
-                  <span
-                    className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                      isActive
-                        ? "bg-white/15 text-[#B6F022]"
-                        : "bg-[#CFE26C]/40 text-[#0B636B]"
+
+                  <h3
+                    className={`font-display font-bold text-base ${
+                      isActive ? "text-white" : "text-[#0B636B]"
                     }`}
                   >
-                    {item.rate}
-                  </span>
-                </div>
-
-                <h3
-                  className={`font-display font-bold text-base ${
-                    isActive ? "text-white" : "text-[#0B636B]"
-                  }`}
-                >
-                  {item.name}
-                </h3>
-                <p
-                  className={`text-xs mt-1 line-clamp-2 ${
-                    isActive ? "text-[#EFF0EB]/80" : "text-[#0B636B]/70"
-                  }`}
-                >
-                  {item.sub}
-                </p>
-              </button>
+                    {item.name}
+                  </h3>
+                  <p
+                    className={`text-xs mt-1 line-clamp-2 ${
+                      isActive ? "text-[#EFF0EB]/80" : "text-[#0B636B]/70"
+                    }`}
+                  >
+                    {item.sub}
+                  </p>
+                </button>
+              </ScrollReveal>
             );
           })}
         </div>
 
         {/* Selected Category Details Drawer / Panel */}
-        <div className="mt-6 p-6 sm:p-7 rounded-3xl bg-white border border-[#0B636B]/15 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-            
-            {/* Summary info (4 cols) */}
-            <div className="md:col-span-4 border-b md:border-b-0 md:border-r border-[#0B636B]/10 pb-6 md:pb-0 md:pr-6">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#64B60A] mb-1">
-                <Sparkles className="w-4 h-4" />
-                <span>Panduan Detail Kategori</span>
-              </div>
-              <h3 className="font-display font-bold text-xl text-[#0B636B]">
-                {activeCategory.name}
-              </h3>
-              <p className="text-xs text-[#0B636B]/70 mt-1 leading-relaxed">
-                {activeCategory.sub}
-              </p>
+        <ScrollReveal animation="fade-up" delay={200} duration={600}>
+          <div className="mt-6 p-6 sm:p-7 rounded-3xl bg-white border border-[#0B636B]/15 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+              {/* Summary info (4 cols) */}
+              <div className="md:col-span-4 border-b md:border-b-0 md:border-r border-[#0B636B]/10 pb-6 md:pb-0 md:pr-6">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#64B60A] mb-1">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Panduan Detail Kategori</span>
+                </div>
+                <h3 className="font-display font-bold text-xl text-[#0B636B]">
+                  {activeCategory.name}
+                </h3>
+                <p className="text-xs text-[#0B636B]/70 mt-1 leading-relaxed">
+                  {activeCategory.sub}
+                </p>
 
-              <div className="mt-4 p-3 rounded-xl bg-[#EFF0EB] border border-[#0B636B]/10">
-                <div className="text-xs text-[#0B636B]/70">Nilai Konversi:</div>
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="font-display font-extrabold text-2xl text-[#0B636B]">
-                    {activeCategory.rate}
-                  </span>
-                  <span className="text-xs font-semibold text-[#64B60A]">
-                    ({activeCategory.rupiah})
-                  </span>
+                <div className="mt-4 p-3 rounded-xl bg-[#EFF0EB] border border-[#0B636B]/10">
+                  <div className="text-xs text-[#0B636B]/70">Nilai Konversi:</div>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="font-display font-extrabold text-2xl text-[#0B636B]">
+                      {activeCategory.rate}
+                    </span>
+                    <span className="text-xs font-semibold text-[#64B60A]">
+                      ({activeCategory.rupiah})
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-start gap-2 text-xs text-[#0B636B]/80 bg-[#CFE26C]/25 p-3 rounded-xl border border-[#64B60A]/20">
+                  <Info className="w-4 h-4 text-[#64B60A] shrink-0 mt-0.5" />
+                  <span><strong>Tips Praktis:</strong> {activeCategory.tips}</span>
                 </div>
               </div>
 
-              <div className="mt-4 flex items-start gap-2 text-xs text-[#0B636B]/80 bg-[#CFE26C]/25 p-3 rounded-xl border border-[#64B60A]/20">
-                <Info className="w-4 h-4 text-[#64B60A] shrink-0 mt-0.5" />
-                <span><strong>Tips Praktis:</strong> {activeCategory.tips}</span>
+              {/* Accepted items (4 cols) */}
+              <div className="md:col-span-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#64B60A] uppercase tracking-wider mb-3">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Yang Diterima (Layak Poin)</span>
+                </div>
+                <ul className="space-y-2.5">
+                  {activeCategory.accepted.map((text, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-xs text-[#0B636B]/85 leading-snug"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#64B60A] shrink-0 mt-1.5" />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
 
-            {/* Accepted items (4 cols) */}
-            <div className="md:col-span-4">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#64B60A] uppercase tracking-wider mb-3">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Yang Diterima (Layak Poin)</span>
-              </div>
-              <ul className="space-y-2.5">
-                {activeCategory.accepted.map((text, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-xs text-[#0B636B]/85 leading-snug"
+              {/* Rejected items (4 cols) */}
+              <div className="md:col-span-4">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#b91c1c] uppercase tracking-wider mb-3">
+                  <XCircle className="w-4 h-4" />
+                  <span>Yang Tidak Diterima</span>
+                </div>
+                <ul className="space-y-2.5">
+                  {activeCategory.rejected.map((text, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-xs text-[#0B636B]/75 leading-snug"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-1.5" />
+                      <span>{text}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 pt-4 border-t border-[#0B636B]/10">
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-[#0B636B] hover:text-[#64B60A] transition-colors"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#64B60A] shrink-0 mt-1.5" />
-                    <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Rejected items (4 cols) */}
-            <div className="md:col-span-4">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#b91c1c] uppercase tracking-wider mb-3">
-                <XCircle className="w-4 h-4" />
-                <span>Yang Tidak Diterima</span>
-              </div>
-              <ul className="space-y-2.5">
-                {activeCategory.rejected.map((text, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-xs text-[#0B636B]/75 leading-snug"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-1.5" />
-                    <span>{text}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 pt-4 border-t border-[#0B636B]/10">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 text-xs font-bold text-[#0B636B] hover:text-[#64B60A] transition-colors"
-                >
-                  <span>Setor {activeCategory.name} sekarang</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                    <span>Setor {activeCategory.name} sekarang</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
-
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

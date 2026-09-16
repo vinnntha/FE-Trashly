@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, HelpCircle, Sparkles } from "lucide-react";
+import { ChevronDown, HelpCircle } from "lucide-react";
+import { ScrollReveal } from "./ScrollReveal";
 
 interface FaqItem {
   question: string;
@@ -47,61 +48,68 @@ export default function FaqSection() {
     <section id="faq" className="py-20 md:py-24 bg-white/60 border-t border-[#0B636B]/10">
       <div className="max-w-4xl mx-auto px-6 md:px-12">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#CFE26C]/40 border border-[#64B60A]/20 text-[#0B636B] text-xs font-bold uppercase tracking-wider mb-3">
-            <HelpCircle className="w-3.5 h-3.5 text-[#64B60A]" />
-            <span>Tanya Jawab</span>
+        <ScrollReveal animation="fade-up" duration={600}>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#CFE26C]/40 border border-[#64B60A]/20 text-[#0B636B] text-xs font-bold uppercase tracking-wider mb-3">
+              <HelpCircle className="w-3.5 h-3.5 text-[#64B60A]" />
+              <span>Tanya Jawab</span>
+            </div>
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#0B636B] tracking-tight">
+              Pertanyaan yang Sering Diajukan
+            </h2>
+            <p className="text-xs sm:text-sm text-[#0B636B]/70 mt-2 max-w-lg mx-auto">
+              Pelajari lebih lanjut seputar alur penyetoran, perhitungan poin, dan penukaran hadiah di Trashly.
+            </p>
           </div>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#0B636B] tracking-tight">
-            Pertanyaan yang Sering Diajukan
-          </h2>
-          <p className="text-xs sm:text-sm text-[#0B636B]/70 mt-2 max-w-lg mx-auto">
-            Pelajari lebih lanjut seputar alur penyetoran, perhitungan poin, dan penukaran hadiah di Trashly.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Accordion List */}
         <div className="space-y-3.5">
           {FAQS.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div
+              <ScrollReveal
                 key={index}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-                  isOpen
-                    ? "bg-[#EFF0EB] border-[#0B636B]/25 shadow-xs"
-                    : "bg-white border-[#0B636B]/10 hover:border-[#0B636B]/20"
-                }`}
+                animation="fade-up"
+                delay={index * 70}
+                duration={500}
               >
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(index)}
-                  className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
+                <div
+                  className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isOpen
+                      ? "bg-[#EFF0EB] border-[#0B636B]/25 shadow-xs"
+                      : "bg-white border-[#0B636B]/10 hover:border-[#0B636B]/20"
+                  }`}
                 >
-                  <span className="font-display font-bold text-sm sm:text-base text-[#0B636B]">
-                    {faq.question}
-                  </span>
-                  <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                      isOpen
-                        ? "bg-[#0B636B] text-[#B6F022] rotate-180"
-                        : "bg-[#EFF0EB] text-[#0B636B]"
-                    }`}
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(index)}
+                    className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
                   >
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
+                    <span className="font-display font-bold text-sm sm:text-base text-[#0B636B]">
+                      {faq.question}
+                    </span>
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                        isOpen
+                          ? "bg-[#0B636B] text-[#B6F022] rotate-180"
+                          : "bg-[#EFF0EB] text-[#0B636B]"
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
 
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-0 text-xs sm:text-sm text-[#0B636B]/80 leading-relaxed border-t border-[#0B636B]/10 mt-1 animate-in fade-in duration-200">
-                    <p className="pt-3">{faq.answer}</p>
-                  </div>
-                )}
-              </div>
+                  {isOpen && (
+                    <div className="px-5 pb-5 pt-0 text-xs sm:text-sm text-[#0B636B]/80 leading-relaxed border-t border-[#0B636B]/10 mt-1 animate-in fade-in duration-200">
+                      <p className="pt-3">{faq.answer}</p>
+                    </div>
+                  )}
+                </div>
+              </ScrollReveal>
             );
           })}
         </div>
-
       </div>
     </section>
   );

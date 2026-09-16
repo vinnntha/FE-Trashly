@@ -6,10 +6,14 @@ import FeatureGrid from "./(marketing)/components/FeatureGrid";
 import CtaSteps from "./(marketing)/components/CtaSteps";
 import FaqSection from "./(marketing)/components/FaqSection";
 import Footer from "./(marketing)/components/Footer";
+import { ScrollProgress } from "./(marketing)/components/ScrollProgress";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-[#EFF0EB] text-[#0B636B]">
+    <main className="min-h-screen flex flex-col bg-[#EFF0EB] text-[#0B636B] relative">
+      {/* Scroll Progress Bar & Floating Back-To-Top Button */}
+      <ScrollProgress />
+
       {/* Sticky Top Navigation */}
       <Navbar />
 
