@@ -62,8 +62,74 @@ select:focus-visible {
   }
 }
 
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
 .animate-spin-slow {
   animation: spinSlow 40s linear infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Custom Range Slider for Waste Calculator */
+input[type="range"].accent-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(11, 99, 107, 0.15);
+  border-radius: 9999px;
+  height: 8px;
+  outline: none;
+}
+
+input[type="range"].accent-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #64B60A;
+  border: 3px solid #EFF0EB;
+  box-shadow: 0 2px 8px rgba(11, 99, 107, 0.35);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+input[type="range"].accent-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #B6F022;
+}
+
+input[type="range"].accent-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #64B60A;
+  border: 3px solid #EFF0EB;
+  box-shadow: 0 2px 8px rgba(11, 99, 107, 0.35);
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

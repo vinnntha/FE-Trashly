@@ -4,6 +4,7 @@ import TrustRow from "./(marketing)/components/TrustRow";
 import AboutSection from "./(marketing)/components/AboutSection";
 import FeatureGrid from "./(marketing)/components/FeatureGrid";
 import CtaSteps from "./(marketing)/components/CtaSteps";
+import FaqSection from "./(marketing)/components/FaqSection";
 import Footer from "./(marketing)/components/Footer";
 
 export default function Home() {
@@ -12,20 +13,23 @@ export default function Home() {
       {/* Sticky Top Navigation */}
       <Navbar />
 
-      {/* Asymmetric Hero with Floating Point Card & Circular Metaphor */}
+      {/* Hero with Interactive Waste-to-Reward Calculator */}
       <Hero />
 
-      {/* Trust Row: Accepted Waste Categories with Verification Badges */}
+      {/* Interactive Category Inspector & Accepted/Rejected Criteria */}
       <TrustRow />
 
-      {/* About Section: Story, Mission & Community Impact */}
+      {/* About Section with Persona Switcher (Nasabah vs Pengelola) */}
       <AboutSection />
 
-      {/* Feature Grid: Documentary Photo + Tiered Color Cards */}
+      {/* Bento Grid: IoT Scale, Digital Receipt & Reward System */}
       <FeatureGrid />
 
-      {/* Deep Teal CTA & 1-2-3 Sequence */}
+      {/* 3-Step Walkthrough with Dynamic Interactive State */}
       <CtaSteps />
+
+      {/* Frequently Asked Questions Accordion */}
+      <FaqSection />
 
       {/* Global Footer */}
       <Footer />

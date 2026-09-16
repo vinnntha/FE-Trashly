@@ -57,6 +57,12 @@ export default function Navbar() {
           >
             Kategori Sampah
           </a>
+          <a
+            href="#faq"
+            className="hover:text-[#0B636B] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-[#64B60A] after:absolute after:bottom-0 after:left-0 after:transition-all"
+          >
+            FAQ
+          </a>
           <Link
             href="/about"
             className="hover:text-[#0B636B] transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-[#64B60A] after:absolute after:bottom-0 after:left-0 after:transition-all"
@@ -125,6 +131,13 @@ export default function Navbar() {
               className="py-1 hover:text-[#64B60A]"
             >
               Kategori Sampah
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 hover:text-[#64B60A]"
+            >
+              FAQ
             </a>
             <Link
               href="/about"
