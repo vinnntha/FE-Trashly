@@ -2,11 +2,12 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/context/AuthContext";
 import { StatCard } from "@/components/admin/StatCard";
 import { VerifySetorModal } from "@/components/admin/VerifySetorModal";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -101,6 +102,25 @@ export default function AdminDashboardPage() {
   // Verification modal state
   const [selectedSetorId, setSelectedSetorId] = useState<string | null>(null);
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState<boolean>(false);
+
+  // Penukaran verification state
+  const [selectedPenukaranToVerify, setSelectedPenukaranToVerify] = useState<PenukaranItem | null>(null);
+  const [isConfirmPenukaranOpen, setIsConfirmPenukaranOpen] = useState<boolean>(false);
+
+  const completePenukaranMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return apiClient(`/penukaran-poin/admin/status/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: "selesai" }),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-recent-penukaran"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-dashboard-stats"] });
+      setIsConfirmPenukaranOpen(false);
+      setSelectedPenukaranToVerify(null);
+    },
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -1260,18 +1280,33 @@ export default function AdminDashboardPage() {
                         className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
                           isProcess
                             ? "bg-amber-100 text-amber-800 border border-amber-300"
-                            : "bg-[#64B60A]/15 text-[#64B60A] border border-[#64B60A]/30"
+                            : "bg-[#CFE26C]/30 text-[#0B636B] border border-[#64B60A]/30"
                         }`}
                       >
-                        {isProcess ? "Diproses" : "Selesai"}
+                        {isProcess ? "Diproses" : "Berhasil ditukar"}
                       </span>
 
-                      <Link
-                        href="/admin/penukaran"
-                        className="px-3 py-1.5 rounded-full bg-[#0B636B] hover:bg-[#084b51] text-[#B6F022] text-xs font-bold transition-all shadow-xs"
-                      >
-                        Kelola
-                      </Link>
+                      {isProcess ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedPenukaranToVerify(item);
+                            setIsConfirmPenukaranOpen(true);
+                          }}
+                          className="px-3 py-1.5 rounded-full bg-[#0B636B] hover:bg-[#084b51] text-[#B6F022] text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Verifikasi Diambil</span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/nota/tukar/${item.id}`}
+                          className="p-1.5 rounded-xl bg-white hover:bg-[#EFF0EB] border border-[#0B636B]/15 text-[#0B636B] transition-colors"
+                          title="Buka Nota Penukaran"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );
@@ -1305,6 +1340,23 @@ export default function AdminDashboardPage() {
           queryClient.invalidateQueries({ queryKey: ["admin-recent-setoran"] });
           queryClient.invalidateQueries({ queryKey: ["admin-rekapitulasi-bulanan"] });
         }}
+      />
+
+      {/* Confirmation Dialog for Penukaran Hadiah */}
+      <ConfirmDialog
+        isOpen={isConfirmPenukaranOpen}
+        onClose={() => setIsConfirmPenukaranOpen(false)}
+        onConfirm={() => {
+          if (selectedPenukaranToVerify) {
+            completePenukaranMutation.mutate(selectedPenukaranToVerify.id);
+          }
+        }}
+        title="Verifikasi Hadiah Sudah Diambil"
+        message={`Pastikan hadiah "${selectedPenukaranToVerify?.hadiah?.namaHadiah}" telah diambil oleh nasabah "${selectedPenukaranToVerify?.nasabah?.namaNasabah}". Status akan diperbarui menjadi "Berhasil ditukar".`}
+        confirmLabel={completePenukaranMutation.isPending ? "Memverifikasi..." : "Ya, Sudah Diambil"}
+        cancelLabel="Batal"
+        variant="warning"
+        isLoading={completePenukaranMutation.isPending}
       />
     </div>
   );

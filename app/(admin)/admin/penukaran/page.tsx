@@ -162,9 +162,9 @@ export default function DataPenukaranPage() {
     }
     if (s === "selesai") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#B6F022]/20 text-[#0B636B] border border-[#64B60A]/40">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#CFE26C]/30 text-[#0B636B] border border-[#64B60A]/30">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#64B60A]" />
-          <span>Diserahkan / Selesai</span>
+          <span>Berhasil ditukar</span>
         </span>
       );
     }
@@ -279,15 +279,15 @@ export default function DataPenukaranPage() {
               <button
                 type="button"
                 onClick={() => handleOpenConfirm(item)}
-                className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0B636B] hover:bg-[#084b51] text-[#B6F022] shadow-sm shadow-[#0B636B]/20 transition-all active:scale-95 flex items-center gap-1"
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0B636B] hover:bg-[#084b51] text-[#B6F022] shadow-sm shadow-[#0B636B]/20 transition-all active:scale-95 flex items-center gap-1.5"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Serahkan</span>
+                <span>Verifikasi Diambil</span>
               </button>
             ) : (
               <span className="text-xs text-[#64B60A] font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Tuntas</span>
+                <span>Sudah Diambil</span>
               </span>
             )}
             <Link
@@ -443,9 +443,9 @@ export default function DataPenukaranPage() {
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleConfirmSelesai}
-        title="Konfirmasi Penyerahan Hadiah"
-        message={`Pastikan hadiah "${selectedPenukaran?.hadiah?.namaHadiah}" telah diserahkan secara langsung kepada nasabah "${selectedPenukaran?.nasabah?.namaNasabah}". Tindakan ini akan menyelesaikan klaim transaksi.`}
-        confirmLabel={completeMutation.isPending ? "Menyimpan..." : "Ya, Tandai Selesai"}
+        title="Verifikasi Hadiah Sudah Diambil"
+        message={`Pastikan hadiah "${selectedPenukaran?.hadiah?.namaHadiah}" telah diambil oleh nasabah "${selectedPenukaran?.nasabah?.namaNasabah}". Status penukaran akan diperbarui menjadi "Berhasil ditukar".`}
+        confirmLabel={completeMutation.isPending ? "Memverifikasi..." : "Ya, Sudah Diambil"}
         cancelLabel="Batal"
         variant="warning"
         isLoading={completeMutation.isPending}
