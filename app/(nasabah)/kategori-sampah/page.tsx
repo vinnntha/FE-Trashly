@@ -217,7 +217,7 @@ export default function KategoriSampahPage() {
               {/* Action Footer */}
               <div className="p-5 pt-0">
                 <Link
-                  href="/setor"
+                  href={`/setor?kategoriId=${item.id}`}
                   className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full bg-[#EFF0EB] hover:bg-[#B6F022] text-[#0B636B] font-bold text-xs transition-all duration-200"
                 >
                   <PlusCircle className="w-3.5 h-3.5 text-[#64B60A]" />

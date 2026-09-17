@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,8 +47,10 @@ const createSetorSampahSchema = z.object({
 
 type SetorFormValues = z.infer<typeof createSetorSampahSchema>;
 
-export default function AjukanSetorPage() {
+function AjukanSetorForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const paramKategoriId = searchParams.get("kategoriId");
   const queryClient = useQueryClient();
 
   const [successResult, setSuccessResult] = useState<{
@@ -81,15 +83,22 @@ export default function AjukanSetorPage() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<SetorFormValues>({
     resolver: zodResolver(createSetorSampahSchema) as any,
     defaultValues: {
       tanggal: todayDate,
       catatan: "",
-      items: [{ kategoriSampahId: "", beratKg: 1 }],
+      items: [{ kategoriSampahId: paramKategoriId || "", beratKg: 1 }],
     },
   });
+
+  useEffect(() => {
+    if (paramKategoriId) {
+      setValue("items.0.kategoriSampahId", paramKategoriId);
+    }
+  }, [paramKategoriId, setValue]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -442,3 +451,18 @@ export default function AjukanSetorPage() {
     </div>
   );
 }
+
+export default function AjukanSetorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="w-8 h-8 border-4 border-[#0B636B] border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <AjukanSetorForm />
+    </Suspense>
+  );
+}
+
