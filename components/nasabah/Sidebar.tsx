@@ -133,18 +133,8 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
           className="flex items-center gap-2.5 group w-full"
           onClick={onMobileClose}
         >
-          <div className=" text-[#B6F022] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+          <div className="flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Image src="/images/Full Logo Trashly.png" alt="Logo" width={90} height={50} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[9px] font-extrabold bg-[#B6F022] text-[#0B636B] px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-                Nasabah
-              </span>
-            </div>
-            <p className="text-[10px] text-[#0B636B]/60 truncate">
-              {user?.nasabah?.namaNasabah || "Portal Bank Sampah"}
-            </p>
           </div>
         </Link>
 
@@ -173,7 +163,9 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
               const Icon = item.icon;
               const isActive =
                 pathname === item.href ||
-                (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                (item.href !== "/dashboard" &&
+                  pathname.startsWith(`${item.href}/`) &&
+                  (item.href !== "/hadiah" || !pathname.startsWith("/hadiah/riwayat")));
 
               const badgeValue =
                 item.badgeKey === "pendingSetoran" && pendingCount > 0

@@ -46,7 +46,7 @@ export const STATUS_PENUKARAN_CONFIG: Record<string, StatusConfig> = {
     dotColor: "bg-amber-500",
   },
   selesai: {
-    label: "Selesai / Diambil",
+    label: "Berhasil ditukar",
     bg: "bg-[#CFE26C]/30",
     text: "text-[#0B636B]",
     border: "border-[#64B60A]/30",
