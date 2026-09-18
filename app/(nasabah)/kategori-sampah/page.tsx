@@ -149,42 +149,55 @@ export default function KategoriSampahPage() {
           {filteredList.map((item) => (
             <div
               key={item.id}
-              className="rounded-3xl bg-white border border-[#0B636B]/12 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
+              className="rounded-3xl bg-white border border-[#0B636B]/10 p-3.5 sm:p-4 shadow-sm hover:shadow-md hover:border-[#0B636B]/25 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group"
             >
               <div>
-                {/* Image / Icon Header */}
-                <div className="relative w-full h-44 bg-[#EFF0EB] overflow-hidden flex items-center justify-center">
+                {/* Photo Mockup Frame */}
+                <div className="relative w-full aspect-[4/3] rounded-2xl bg-[#F6F8F5] border border-[#0B636B]/6 overflow-hidden flex items-center justify-center">
                   {item.foto ? (
-                    <Image
-                      src={getImageUrl(item.foto)}
-                      alt={item.namaKategori}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                    />
+                    <>
+                      {/* Ambient blurred backdrop */}
+                      <div
+                        className="absolute inset-0 bg-cover bg-center blur-xl opacity-20 scale-110 pointer-events-none"
+                        style={{ backgroundImage: `url(${getImageUrl(item.foto)})` }}
+                      />
+                      <Image
+                        src={getImageUrl(item.foto)}
+                        alt={item.namaKategori}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="rounded-xl object-contain p-3.5 drop-shadow-sm group-hover:scale-105 transition-transform duration-300 relative z-10"
+                      />
+                    </>
                   ) : (
                     <div className="flex flex-col items-center gap-2 text-[#0B636B]/30">
-                      <Recycle className="w-14 h-14" />
-                      <span className="text-[11px] font-semibold text-[#0B636B]/50">
+                      <Recycle className="w-12 h-12 text-[#0B636B]/40 stroke-1" />
+                      <span className="text-[11px] font-medium text-[#0B636B]/50">
                         Foto Segera Tersedia
                       </span>
                     </div>
                   )}
 
                   {/* Badge Jenis Sampah Floating */}
-                  <div className="absolute top-3 right-3">
-                    <JenisSampahBadge jenis={item.jenis} />
+                  <div className="absolute top-2.5 right-2.5 z-20">
+                    <JenisSampahBadge
+                      jenis={item.jenis}
+                      className="backdrop-blur-md bg-white/90 shadow-xs text-[11px]"
+                    />
                   </div>
                 </div>
 
                 {/* Card Info */}
-                <div className="p-5">
-                  <h3 className="font-display font-bold text-lg text-[#0B636B] tracking-tight mb-2">
+                <div className="pt-3.5 pb-2 px-1">
+                  <h3
+                    className="font-display font-bold text-base sm:text-lg text-[#0B636B] tracking-tight line-clamp-1 group-hover:text-[#64B60A] transition-colors"
+                    title={item.namaKategori}
+                  >
                     {item.namaKategori}
                   </h3>
 
                   {/* Rates / Valuation Grid */}
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#0B636B]/10">
+                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2.5 border-t border-[#0B636B]/10">
                     <div className="p-2.5 rounded-2xl bg-[#EFF0EB]/70 border border-[#0B636B]/10">
                       <p className="text-[10px] uppercase font-bold text-[#0B636B]/60 tracking-wider">
                         Nilai Poin
@@ -215,10 +228,10 @@ export default function KategoriSampahPage() {
               </div>
 
               {/* Action Footer */}
-              <div className="p-5 pt-0">
+              <div className="pt-2">
                 <Link
                   href={`/setor?kategoriId=${item.id}`}
-                  className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full bg-[#EFF0EB] hover:bg-[#B6F022] text-[#0B636B] font-bold text-xs transition-all duration-200"
+                  className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 sm:py-3 px-4 rounded-full bg-[#EFF0EB] hover:bg-[#B6F022] text-[#0B636B] font-bold text-xs transition-all duration-200 shadow-xs"
                 >
                   <PlusCircle className="w-3.5 h-3.5 text-[#64B60A]" />
                   <span>Ajukan Setoran Kategori Ini</span>

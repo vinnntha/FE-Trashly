@@ -109,7 +109,7 @@ export default function KatalogHadiahPage() {
             <span>Katalog Reward</span>
           </span>
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
-            Tukar Poin Sampah Jadi Hadiah 🎁
+            Tukar Poin Sampah Jadi Hadiah
           </h1>
           <p className="text-xs sm:text-sm text-[#0B636B]/75 mt-1">
             Gunakan tabungan poin sampah Anda untuk mendapatkan sembako, voucher belanja, dan hadiah ramah lingkungan.
@@ -215,35 +215,42 @@ export default function KatalogHadiahPage() {
             return (
               <div
                 key={item.id}
-                className="rounded-3xl bg-white border border-[#0B636B]/12 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                className="rounded-3xl bg-white border border-[#0B636B]/10 p-3.5 sm:p-4 shadow-xl hover:shadow-xl hover:border-[#0B636B]/25 transition-all duration-200 flex flex-col justify-between group"
               >
                 <div>
-                  {/* Photo / Container */}
-                  <div className="relative w-full h-48 bg-[#EFF0EB] overflow-hidden flex items-center justify-center">
+                  {/* Photo Mockup Frame */}
+                  <div className="relative w-full aspect-[4/3] rounded-2xl bg-[#F6F8F5] border border-[#0B636B]/6 overflow-hidden flex items-center justify-center">
                     {item.foto ? (
-                      <Image
-                        src={getImageUrl(item.foto)}
-                        alt={item.namaHadiah}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover"
-                      />
+                      <>
+                        {/* Ambient blurred backdrop */}
+                        <div
+                          className="absolute inset-0 bg-cover bg-center blur-xl opacity-20 scale-110 pointer-events-none"
+                          style={{ backgroundImage: `url(${getImageUrl(item.foto)})` }}
+                        />
+                        <Image
+                          src={getImageUrl(item.foto)}
+                          alt={item.namaHadiah}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-contain p-3.5 drop-shadow-sm group-hover:scale-105 transition-transform duration-300 relative z-10"
+                        />
+                      </>
                     ) : (
                       <div className="flex flex-col items-center gap-2 text-[#0B636B]/30">
-                        <Gift className="w-14 h-14 text-[#0B636B]/40" />
-                        <span className="text-[11px] font-semibold text-[#0B636B]/50">
+                        <Gift className="w-12 h-12 text-[#0B636B]/40 stroke-1" />
+                        <span className="text-[11px] font-medium text-[#0B636B]/50">
                           Foto Segera Tersedia
                         </span>
                       </div>
                     )}
 
                     {/* Stock Badge */}
-                    <div className="absolute top-3 right-3">
+                    <div className="absolute top-2.5 right-2.5 z-20">
                       <span
-                        className={`px-3 py-1 rounded-full text-[11px] font-bold border shadow-sm ${
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border backdrop-blur-md shadow-xs ${
                           isOutOfStock
-                            ? "bg-red-50 text-red-700 border-red-200"
-                            : "bg-white/95 text-[#0B636B] border-[#0B636B]/15"
+                            ? "bg-red-50/90 text-red-700 border-red-200"
+                            : "bg-white/90 text-[#0B636B] border-[#0B636B]/15"
                         }`}
                       >
                         {isOutOfStock ? "Habis" : `Sisa Stok: ${item.stok}`}
@@ -252,16 +259,19 @@ export default function KatalogHadiahPage() {
                   </div>
 
                   {/* Info */}
-                  <div className="p-5">
-                    <h3 className="font-display font-bold text-lg text-[#0B636B] tracking-tight mb-2">
+                  <div className="pt-3.5 pb-2 px-1">
+                    <h3
+                      className="font-display font-bold text-base sm:text-lg text-[#0B636B] tracking-tight line-clamp-1 group-hover:text-[#64B60A] transition-colors"
+                      title={item.namaHadiah}
+                    >
                       {item.namaHadiah}
                     </h3>
 
-                    <div className="flex items-baseline gap-2 pt-3 border-t border-[#0B636B]/10">
+                    <div className="flex items-baseline gap-2 mt-2 pt-2.5 border-t border-[#0B636B]/10">
                       <span className="font-display font-extrabold text-2xl text-[#64B60A]">
                         {item.poinDibutuhkan.toLocaleString("id-ID")}
                       </span>
-                      <span className="text-xs font-bold text-[#0B636B]/70">
+                      <span className="text-[11px] font-bold text-[#0B636B]/70 tracking-wider uppercase">
                         POIN DIPERLUKAN
                       </span>
                     </div>
@@ -269,12 +279,12 @@ export default function KatalogHadiahPage() {
                 </div>
 
                 {/* Tukar Button */}
-                <div className="p-5 pt-0">
+                <div className="pt-2">
                   <button
                     onClick={() => setSelectedHadiah(item)}
                     disabled={isDisabled}
                     title={reasonLabel}
-                    className={`w-full py-3 px-4 rounded-full font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2 shadow-sm ${
+                    className={`w-full py-2.5 sm:py-3 px-4 rounded-full font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2 shadow-sm ${
                       isDisabled
                         ? "bg-[#EFF0EB] text-[#0B636B]/40 cursor-not-allowed border border-[#0B636B]/10"
                         : "bg-[#B6F022] hover:bg-[#a6df1e] text-[#0B636B] active:scale-95 shadow-[0_4px_16px_-4px_rgba(182,240,34,0.6)]"

@@ -81,14 +81,13 @@ export default function SkeletonCard({
       {items.map((_, i) => (
         <div
           key={i}
-          className="rounded-3xl bg-white/70 border border-[#0B636B]/10 overflow-hidden animate-pulse flex flex-col"
+          className="rounded-3xl bg-white border border-[#0B636B]/10 p-3.5 sm:p-4 animate-pulse flex flex-col justify-between space-y-4"
         >
-          <div className="w-full h-44 bg-[#EFF0EB]" />
-          <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+          <div className="w-full aspect-[4/3] rounded-2xl bg-[#EFF0EB]" />
+          <div className="space-y-3 px-1 flex-1 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-16 h-4 bg-[#EFF0EB] rounded-full" />
               <div className="w-3/4 h-5 bg-[#EFF0EB] rounded" />
-              <div className="w-full h-3 bg-[#EFF0EB] rounded" />
+              <div className="w-1/2 h-4 bg-[#EFF0EB] rounded" />
             </div>
             <div className="pt-3 border-t border-[#0B636B]/10 flex items-center justify-between">
               <div className="w-20 h-5 bg-[#EFF0EB] rounded" />
