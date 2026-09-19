@@ -67,7 +67,7 @@ export default function KategoriSampahPage() {
             <span>Katalog Sampah</span>
           </span>
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
-            Daftar Jenis Sampah Diterima ♻️
+            Daftar Jenis Sampah Diterima
           </h1>
           <p className="text-xs sm:text-sm text-[#0B636B]/75 mt-1 max-w-xl">
             Ketahui nilai poin per kilogram sampah terpilah Anda sebelum disetorkan ke bank sampah unit.
@@ -166,7 +166,7 @@ export default function KategoriSampahPage() {
                         alt={item.namaKategori}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="rounded-xl object-contain p-3.5 drop-shadow-sm group-hover:scale-105 transition-transform duration-300 relative z-10"
+                        className="rounded-2xl object-contain p-3.5 drop-shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10"
                       />
                     </>
                   ) : (

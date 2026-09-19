@@ -473,7 +473,7 @@ export default function NasabahDashboardPage() {
           </div>
 
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#0B636B] tracking-tight">
-            {greeting}, {nasabahName}! 👋
+            {greeting}, {nasabahName}!
           </h1>
           <p className="text-xs sm:text-sm text-[#0B636B]/75 mt-1">
             Pantau kontribusi pemilahan sampah, pertumbuhan saldo poin, dan reward hijau Anda.
@@ -669,7 +669,7 @@ export default function NasabahDashboardPage() {
                   <span className="text-xs font-semibold text-[#0B636B]/60">/ {targetGoalKg} kg</span>
                 </span>
                 <span className="text-xs font-semibold text-[#64B60A]">
-                  {currentMonthKg >= targetGoalKg ? "Target Tercapai! 🎉" : `Sisa ${(targetGoalKg - currentMonthKg).toFixed(1)} kg lagi`}
+                  {currentMonthKg >= targetGoalKg ? "Target Tercapai!" : `Sisa ${(targetGoalKg - currentMonthKg).toFixed(1)} kg lagi`}
                 </span>
               </div>
 
