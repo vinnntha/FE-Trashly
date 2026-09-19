@@ -135,7 +135,7 @@ export default function LoginPage() {
           {/* Header Form */}
           <div className="mb-8">
             <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-[#0B636B] tracking-tight">
-              Selamat Datang Kembali 👋
+              Selamat Datang Kembali
             </h2>
             <p className="text-sm text-[#0B636B]/75 mt-1.5">
               Masukkan nama pengguna dan kata sandi Anda untuk mengakses akun.

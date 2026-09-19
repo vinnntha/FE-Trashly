@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -26,6 +26,47 @@ interface HadiahItem {
   poinDibutuhkan: number;
   stok: number;
   foto?: string | null;
+}
+
+function GiftPhotoFrame({
+  src,
+  alt,
+  badge,
+}: {
+  src?: string | null;
+  alt: string;
+  badge: ReactNode;
+}) {
+  const [size, setSize] = useState({ width: 4, height: 3 });
+
+  return (
+    <div className="relative w-full rounded-2xl bg-[#F6F8F5] border border-[#0B636B]/6 overflow-hidden">
+      {src ? (
+        <Image
+          src={src}
+          alt={alt}
+          width={size.width}
+          height={size.height}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="block w-full h-auto"
+          onLoad={(event) => {
+            const { naturalWidth, naturalHeight } = event.currentTarget;
+            if (naturalWidth > 0 && naturalHeight > 0) {
+              setSize({ width: naturalWidth, height: naturalHeight });
+            }
+          }}
+        />
+      ) : (
+        <div className="aspect-[4/3] flex flex-col items-center justify-center gap-2 text-[#0B636B]/30">
+          <Gift className="w-12 h-12 text-[#0B636B]/40 stroke-1" />
+          <span className="text-[11px] font-medium text-[#0B636B]/50">
+            Foto Segera Tersedia
+          </span>
+        </div>
+      )}
+      <div className="absolute top-2.5 right-2.5 z-20">{badge}</div>
+    </div>
+  );
 }
 
 export default function KatalogHadiahPage() {
@@ -218,34 +259,10 @@ export default function KatalogHadiahPage() {
                 className="rounded-3xl bg-white border border-[#0B636B]/10 p-3.5 sm:p-4 shadow-xl hover:shadow-xl hover:border-[#0B636B]/25 transition-all duration-200 flex flex-col justify-between group"
               >
                 <div>
-                  {/* Photo Mockup Frame */}
-                  <div className="relative w-full aspect-[4/3] rounded-2xl bg-[#F6F8F5] border border-[#0B636B]/6 overflow-hidden flex items-center justify-center">
-                    {item.foto ? (
-                      <>
-                        {/* Ambient blurred backdrop */}
-                        <div
-                          className="absolute inset-0 bg-cover bg-center blur-xl opacity-20 scale-110 pointer-events-none"
-                          style={{ backgroundImage: `url(${getImageUrl(item.foto)})` }}
-                        />
-                        <Image
-                          src={getImageUrl(item.foto)}
-                          alt={item.namaHadiah}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          className="object-contain p-3.5 drop-shadow-sm group-hover:scale-105 transition-transform duration-300 relative z-10"
-                        />
-                      </>
-                    ) : (
-                      <div className="flex flex-col items-center gap-2 text-[#0B636B]/30">
-                        <Gift className="w-12 h-12 text-[#0B636B]/40 stroke-1" />
-                        <span className="text-[11px] font-medium text-[#0B636B]/50">
-                          Foto Segera Tersedia
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Stock Badge */}
-                    <div className="absolute top-2.5 right-2.5 z-20">
+                  <GiftPhotoFrame
+                    src={item.foto ? getImageUrl(item.foto) : null}
+                    alt={item.namaHadiah}
+                    badge={
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border backdrop-blur-md shadow-xs ${
                           isOutOfStock
@@ -255,8 +272,8 @@ export default function KatalogHadiahPage() {
                       >
                         {isOutOfStock ? "Habis" : `Sisa Stok: ${item.stok}`}
                       </span>
-                    </div>
-                  </div>
+                    }
+                  />
 
                   {/* Info */}
                   <div className="pt-3.5 pb-2 px-1">

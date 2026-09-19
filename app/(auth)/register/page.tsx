@@ -230,7 +230,7 @@ export default function RegisterPage() {
 
           <div className="mb-6">
             <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-[#0B636B] tracking-tight">
-              Buat Akun Baru ✨
+              Buat Akun Baru
             </h2>
             <p className="text-sm text-[#0B636B]/75 mt-1">
               Pilih peran Anda dan isi formulir pendaftaran di bawah ini.
