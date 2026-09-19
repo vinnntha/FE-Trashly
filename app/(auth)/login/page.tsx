@@ -85,7 +85,7 @@ export default function LoginPage() {
 
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B6F022]/20 border border-[#B6F022]/30 text-[#B6F022] text-xs font-semibold mb-4">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Portal Masuk Resmi</span>
+              <span>Halaman Masuk Resmi</span>
             </div>
 
             <h1 className="font-display font-extrabold text-3xl text-white tracking-tight leading-snug mb-4">

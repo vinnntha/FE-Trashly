@@ -13,7 +13,7 @@ export default function NasabahLayout({ children }: { children: ReactNode }) {
       <main className="min-h-screen bg-[#EFF0EB] flex items-center justify-center p-6">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-[#0B636B] border-t-[#B6F022] rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-[#0B636B]">Memuat portal nasabah...</p>
+          <p className="text-sm font-semibold text-[#0B636B]">Memuat halaman nasabah...</p>
         </div>
       </main>
     );

@@ -60,7 +60,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/login" className="hover:text-[#B6F022] transition-colors">
-                  Portal Nasabah & Mitra
+                  Halaman Nasabah & Mitra
                 </Link>
               </li>
             </ul>

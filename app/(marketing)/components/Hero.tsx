@@ -41,6 +41,10 @@ interface PublicStats {
   totalPoinTersalurkan: number;
 }
 
+const WEIGHT_MIN = 1;
+const WEIGHT_MAX = 30;
+const WEIGHT_PRESETS = [2, 5, 10, 20] as const;
+
 const DEFAULT_WASTE_TYPES: WasteType[] = [
   {
     id: "plastik",
@@ -337,20 +341,23 @@ export default function Hero() {
 
                     <input
                       type="range"
-                      min="1"
-                      max="30"
+                      min={WEIGHT_MIN}
+                      max={WEIGHT_MAX}
                       step="1"
                       value={weight}
                       onChange={(e) => setWeight(Number(e.target.value))}
                       className="w-full h-2 bg-[#EFF0EB] rounded-lg appearance-none cursor-pointer accent-[#0B636B]"
                     />
-                    <div className="flex items-center justify-between gap-1.5 mt-2.5">
-                      {[2, 5, 10, 20].map((preset) => (
+                    <div className="relative h-7 mt-2.5">
+                      {WEIGHT_PRESETS.map((preset) => (
                         <button
                           key={preset}
                           type="button"
                           onClick={() => setWeight(preset)}
-                          className={`text-[11px] py-1 px-2.5 rounded-lg font-medium transition-all cursor-pointer ${
+                          style={{
+                            left: `${((preset - WEIGHT_MIN) / (WEIGHT_MAX - WEIGHT_MIN)) * 100}%`,
+                          }}
+                          className={`absolute -translate-x-1/2 whitespace-nowrap text-[11px] py-1 px-2.5 rounded-lg font-medium transition-all cursor-pointer ${
                             weight === preset
                               ? "bg-[#64B60A] text-white font-bold"
                               : "bg-white/80 hover:bg-white text-[#0B636B]/75 border border-[#0B636B]/10"

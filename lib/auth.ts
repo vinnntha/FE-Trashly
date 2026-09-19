@@ -41,7 +41,7 @@ export function useAuthGuard() {
       return;
     }
 
-    // 3. If role is ADMIN, Nasabah portal is not accessible
+    // 3. If role is ADMIN, Nasabah halaman is not accessible
     const currentRole = tokenRole || user.role;
     if (currentRole === "ADMIN") {
       router.push("/admin/dashboard");

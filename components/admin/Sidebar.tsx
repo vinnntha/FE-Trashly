@@ -234,7 +234,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <div className="px-2.5 py-1.5 rounded-xl bg-[#EFF0EB]/50 border border-[#0B636B]/10 flex items-center justify-between text-[10px] text-[#0B636B]/70">
           <span className="flex items-center gap-1.5 font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-[#64B60A] animate-ping" />
-            Portal Aktif
+            Halaman Aktif
           </span>
           <span className="font-mono font-bold text-[#0B636B]">Trashly v1.0</span>
         </div>
@@ -261,7 +261,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Keluar Portal</span>
+          <span>Keluar Halaman</span>
         </button>
       </div>
     </div>

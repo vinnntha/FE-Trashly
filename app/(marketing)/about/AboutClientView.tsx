@@ -126,7 +126,7 @@ const FAQS = [
   },
   {
     q: "Bagaimana cara sekolah atau instansi bergabung jadi Unit Mitra?",
-    a: "Instansi atau sekolah dapat mendaftarkan lokasi bank sampahnya melalui form kemitraan di portal Trashly. Tim kami akan melakukan verifikasi dan pendampingan implementasi sistem penimbangan digital.",
+    a: "Instansi atau sekolah dapat mendaftarkan lokasi bank sampahnya melalui form kemitraan di halaman Trashly. Tim kami akan melakukan verifikasi dan pendampingan implementasi sistem penimbangan digital.",
   },
 ];
 
